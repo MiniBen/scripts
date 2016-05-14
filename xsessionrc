@@ -1,0 +1,16 @@
+#!/bin/bash
+
+xrdb -merge .Xresources
+
+stalonetray &
+
+xscreensaver -no-splash &
+
+feh --bg-scale ~/Scripts/background.jpg &
+
+if [ -x /usr/bin/nm-applet ] ; then
+   nm-applet --sm-disable &
+fi
+
+exec xmonad
+
