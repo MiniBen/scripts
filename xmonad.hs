@@ -36,7 +36,8 @@ main = do
 		    `additionalKeysP`
 		    [("M-f", spawn "firefox")
 		    ,("M-e", spawn "emacs")
-		    ,("M-b", spawn  "amixer -q set Master 5+")
-                    ,("M-n", spawn  "amixer -q set Master 5-")
-                    ,("M-m", spawn  "amixer -q set Master toggle")
+		    ,("<XF86AudioRaiseVolume>", spawn  "amixer -q set Master 5+")
+                    ,("<XF86AudioLowerVolume>", spawn  "amixer -q set Master 5-")
+                    ,("<XF86AudioMute>", spawn  "amixer -q set Master toggle")
+		    ,("M-S-=", spawn  "sudo pm-suspend")
 		    ,("M-S-l", spawn  "xscreensaver-command --lock")]
