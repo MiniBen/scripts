@@ -13,7 +13,8 @@ myWorkspaces = ["web", "term", "edit", "ssh", "music", "extra", "steam"] ++ map 
 myManageHook = composeAll . concat $
                [ [ className =? c --> doFloat | c <- cFloats ]
                , [ title =? t --> doFloat | t <- tFloats ]
-	       , [className =? "Steam" --> doShift "steam"]]
+	       , [className =? "Steam" --> doShift "steam"]
+	       , [className =? "Firefox" --> doShift "web"]]
   where cFloats = ["NES"]
         tFloats = ["Firefox Preferences", "Downloads", "Add-ons", "Rename", "Create" ]
 myLayout = avoidStruts (
@@ -32,7 +33,7 @@ main = do
 		    , focusFollowsMouse = False
 		    , handleEventHook = handleEventHook defaultConfig <+> fullscreenEventHook
 		    , manageHook = myManageHook <+> manageDocks <+> manageHook defaultConfig
-		    ,layoutHook = smartBorders $ myLayout
+		    , layoutHook = smartBorders $ myLayout
 		    , logHook = dynamicLogWithPP xmobarPP
 		      { ppOutput = hPutStrLn xmproc
 		      ,	ppTitle = xmobarColor "green" "" . shorten 50
@@ -46,4 +47,5 @@ main = do
                     ,("<XF86AudioLowerVolume>", spawn  "amixer -q set Master 5-")
                     ,("<XF86AudioMute>", spawn  "amixer -q set Master toggle")
 		    ,("M-S-=", spawn  "sudo pm-suspend")
+		    ,("M-s", sendMessage ToggleStruts)
 		    ,("M-S-l", spawn  "xscreensaver-command --lock")]
