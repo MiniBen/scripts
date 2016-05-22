@@ -3,18 +3,24 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig
-import XMonad.Layout.PerWorkspace
 import XMonad.Layout.SimplestFloat
+import XMonad.Layout.ThreeColumns
+import XMonad.Layout.NoBorders
 import System.IO
 import XMonad.Hooks.EwmhDesktops
 
-myWorkspaces = ["web", "term", "edit", "ssh", "music", "extra"] ++ map show [6..9]
+myWorkspaces = ["web", "term", "edit", "ssh", "music", "extra", "steam"] ++ map show [8..9]
 myManageHook = composeAll . concat $
                [ [ className =? c --> doFloat | c <- cFloats ]
-               , [ title =? t --> doFloat | t <- tFloats ]]
+               , [ title =? t --> doFloat | t <- tFloats ]
+	       , [className =? "Steam" --> doShift "steam"]]
   where cFloats = ["NES"]
         tFloats = ["Firefox Preferences", "Downloads", "Add-ons", "Rename", "Create" ]
-
+myLayout = avoidStruts (
+    ThreeColMid 1 (3/100) (1/2) |||
+    Tall 1 (3/100) (1/2) |||
+    Mirror (Tall 1 (3/100) (1/2)) |||
+    Full)
 main = do
      xmproc <- spawnPipe "/usr/bin/xmobar"
      xmonad $ defaultConfig
@@ -26,7 +32,7 @@ main = do
 		    , focusFollowsMouse = False
 		    , handleEventHook = handleEventHook defaultConfig <+> fullscreenEventHook
 		    , manageHook = myManageHook <+> manageDocks <+> manageHook defaultConfig
-		    , layoutHook = avoidStruts $ layoutHook defaultConfig
+		    ,layoutHook = smartBorders $ myLayout
 		    , logHook = dynamicLogWithPP xmobarPP
 		      { ppOutput = hPutStrLn xmproc
 		      ,	ppTitle = xmobarColor "green" "" . shorten 50
